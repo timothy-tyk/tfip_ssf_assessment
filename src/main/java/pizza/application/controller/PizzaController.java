@@ -76,8 +76,10 @@ public class PizzaController {
   public String getOrderPageById(@PathVariable String id, Model model){
     ResponseEntity<String> orderJson = pizzaRestController.retrieveOrderById(id);
     if(orderJson.getStatusCode()==HttpStatus.NOT_FOUND){
-      // throws Whitelabel error page with Status Code 404.
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND,orderJson.getBody());
+      // throws Whitelabel error page with Status Code 404, but message body doesnt display on railway!!
+      // throw new ResponseStatusException(HttpStatus.NOT_FOUND,orderJson.getBody());
+      model.addAttribute("error", orderJson.getBody());
+      return "notfound";
     }
     Order newOrder = Order.createFromJson(orderJson.getBody().toString());
     model.addAttribute("order", newOrder);
