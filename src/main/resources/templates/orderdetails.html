@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panucci's Pizza</title>
+     <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <h1>Order Delivery Details</h1>
+    <form method="post" data-th-action="@{/pizza/order}" data-th-object="${order}">
+      <table>
+        <tr>
+          <td>Name:</td>
+          <td><input type="text" data-th-field="*{name}" name="name"/></td>
+        </tr><span data-th-if="${#fields.hasErrors('name')}" data-th-errors="*{name}" class="error"></span>
+        <tr>
+          <td>Address:</td>
+          <td><input type="text" data-th-field="*{address}" name="address"/></td>
+        </tr>
+        <span data-th-if="${#fields.hasErrors('address')}" data-th-errors="*{address}" class="error"></span>
+        <tr>
+          <td>Phone:</td>
+          <td><input type="text" data-th-field="*{phoneNumber}" name="phoneNumber"/></td>
+        </tr>
+        <span data-th-if="${#fields.hasErrors('phoneNumber')}" data-th-errors="*{phoneNumber}" class="error"></span>
+        <tr>
+          <td>Rush:</td>
+          <td><input type="checkbox" data-th-field="*{rush}" name="rush"></button></td>
+        </tr>
+        <tr>
+          <td>Comments:</td>
+          <td><textarea rows="4" data-th-field="*{comments}" name="comments"></textarea></td>
+        </tr>
+        <span data-th-if="${#fields.hasErrors('comments')}" data-th-errors="*{comments}" class="error"></span>
+        <tr><td><input type="submit" value="Cancel Order"/></td><td><input type="submit" value="Place Order"/></td></tr>
+      </table>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panucci's Pizza</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="title">
+      <div>
+        <img src="/images/logo.jpg" class="thumbnail" />
+      </div>
+      <h2>Panucci's Pizza</h2>
+    </div>
+
+    <form data-th-object="${pizza}" data-th-action="@{/pizza}" method="post">
+      <div>
+        <h2>Select a pizza</h2>
+        <table>
+          <tr>
+            <td>
+              <div>
+                <img src="/images/Bella.png" class="pizza" />
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="pizza"
+                  data-th-field="*{pizzaName}"
+                  data-th-value="bella"
+                />
+                Bella
+              </div>
+            </td>
+            <td>
+              <div>
+                <img src="/images/Margherita.png" class="pizza" />
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="pizza"
+                  data-th-field="*{pizzaName}"
+                  data-th-value="margherita"
+                />
+                Margherita
+              </div>
+            </td>
+            <td>
+              <div>
+                <img src="/images/Marinara.png" class="pizza" />
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="pizza"
+                  data-th-field="*{pizzaName}"
+                  data-th-value="marinara"
+                />
+                Marinara
+              </div>
+            </td>
+            <td>
+              <div>
+                <img src="/images/SpianataCalabrese.png" class="pizza" />
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="pizza"
+                  data-th-field="*{pizzaName}"
+                  data-th-value="spianatacalabrese"
+                />
+                Spianata Calabrese
+              </div>
+            </td>
+            <td>
+              <div>
+                <img src="/images/TrioFormaggio.png" class="pizza" />
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="pizza"
+                  data-th-field="*{pizzaName}"
+                  data-th-value="trioformaggio"
+                />
+                Trio Formaggio
+              </div>
+            </td>
+          </tr>
+          <span
+            data-th-if="${#fields.hasErrors('pizzaName')}"
+            data-th-errors="*{pizzaName}"
+            class="error"
+          ></span>
+          <tr>
+            <td>Size:</td>
+            <td>
+              <select name="size" data-th-field="*{size}">
+                <option data-th-value="sm">Small</option>
+                <option data-th-value="md">Medium</option>
+                <option data-th-value="lg">Large</option>
+              </select>
+            </td>
+          </tr>
+          <span
+            data-th-if="${#fields.hasErrors('size')}"
+            data-th-errors="*{size}"
+            class="error"
+          ></span>
+          <tr>
+            <td>Quantity:</td>
+            <td>
+              <input
+                type="number"
+                min="1"
+                name="quantity"
+                data-th-field="*{quantity}"
+              />
+            </td>
+          </tr>
+          <span
+            data-th-if="${#fields.hasErrors('quantity')}"
+            data-th-errors="*{quantity}"
+            class="error"
+          ></span>
+          <tr>
+            <td></td>
+            <td>
+              <button type="submit">Next</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  </body>
+</html>
