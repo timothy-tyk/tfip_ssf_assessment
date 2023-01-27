@@ -1,8 +1,13 @@
 package pizza.application.models;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Random;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -20,7 +25,7 @@ public class Order implements Serializable{
 
   @Pattern(regexp = "[0-9]{8}", message = "Phone Number must be 8 digits")
   private String phoneNumber;
-  private boolean rush;
+  private boolean rush = false;
   private String comments;
   private double pizzaCost;
   private double totalCost;
@@ -134,10 +139,45 @@ public class Order implements Serializable{
         pizzaCost = (float) (pizzaCost*1.5);
       }
     }
-  
-    return pizzaCost;
+    return Math.round(pizzaCost);
   }
 
+  public String toJson(){
+    return Json.createObjectBuilder()
+            .add("orderId", this.getId())
+            .add("name", this.getName())
+            .add("address", this.getAddress())
+            .add("phone", this.getPhoneNumber())
+            .add("rush", this.isRush())
+            .add("comments", this.getComments())
+            .add("pizza", this.getPizza().getPizzaName())
+            .add("size", this.getPizza().getSize())
+            .add("quantity", this.getPizza().getQuantity())
+            .add("pizzaCost", this.getPizzaCost())
+            .add("total", this.getTotalCost())
+            .build().toString();
+  }
+
+  public static Order createFromJson(String json){
+    InputStream is = new ByteArrayInputStream(json.getBytes());
+    JsonReader jReader = Json.createReader(is);
+    JsonObject jObj = jReader.readObject();
+    Order newOrder = new Order();
+    Pizza newPizza = new Pizza();
+    newOrder.setId(jObj.getString("orderId"));
+    newOrder.setName(jObj.getString("name"));
+    newOrder.setAddress(jObj.getString("address"));
+    newOrder.setPhoneNumber(jObj.getString("phone"));
+    newOrder.setRush(jObj.getBoolean("rush"));
+    newOrder.setComments(jObj.getString("comments"));
+    newPizza.setPizzaName(jObj.getString("pizza"));
+    newPizza.setSize(jObj.getString("size"));
+    newPizza.setQuantity(jObj.getInt("quantity"));
+    newOrder.setPizzaCost(Double.parseDouble(jObj.getJsonNumber("pizzaCost").toString()));
+    newOrder.setTotalCost(Double.parseDouble(jObj.getJsonNumber("total").toString()));
+    newOrder.setPizza(newPizza);
+    return newOrder;
+  }
 
   
 }

@@ -11,7 +11,13 @@
     <table>
       <tr>
         <td>Order Number:</td>
-        <td><span data-th-text="*{id}"></span></td>
+        <td>
+          <a
+            data-th-href="@{/order/{id}(id=${order.getId()})}"
+            span
+            data-th-text="*{id}"
+          ></a>
+        </td>
       </tr>
       <tr>
         <td>Your order will be delivered to</td>
@@ -19,15 +25,15 @@
       </tr>
       <tr>
         <td>Pizza Cost:</td>
-        <td><span data-th-text="*{pizzaCost}"></span></td>
+        <td>$<span data-th-text="*{pizzaCost}"></span></td>
       </tr>
-      <tr th-data-if="${order.isRush()}">
+      <tr data-th-if="*{rush}">
         <td>Rush:</td>
         <td><span>$2</span></td>
       </tr>
       <tr>
         <td>Total Cost:</td>
-        <td><span data-th-text="*{totalCost}"></span></td>
+        <td>$<span data-th-text="*{totalCost}"></span></td>
       </tr>
     </table>
   </body>

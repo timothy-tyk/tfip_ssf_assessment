@@ -39,14 +39,14 @@ public class Pizza implements Serializable{
     this.quantity = quantity;
   }
   
-  // Methods
-  public JsonObject toJson(){
-    return Json.createObjectBuilder()
-                .add("pizzaName", this.getPizzaName())
-                .add("size", this.getSize())
-                .add("quantity", this.getQuantity()) 
-                .build();
-               }
+  // // Methods
+  // public JsonObject toJson(){
+  //   return Json.createObjectBuilder()
+  //               .add("pizzaName", this.getPizzaName())
+  //               .add("size", this.getSize())
+  //               .add("quantity", this.getQuantity()) 
+  //               .build();
+  //              }
 
   
 }
