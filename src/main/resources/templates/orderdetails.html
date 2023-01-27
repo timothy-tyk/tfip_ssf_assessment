@@ -34,7 +34,7 @@
           <td><textarea rows="4" data-th-field="*{comments}" name="comments"></textarea></td>
         </tr>
         <span data-th-if="${#fields.hasErrors('comments')}" data-th-errors="*{comments}" class="error"></span>
-        <tr><td><input type="submit" value="Cancel Order"/></td><td><input type="submit" value="Place Order"/></td></tr>
+        <tr><td><a data-th-href="@{/}"><button type="button">Cancel Order</button></a></td><td><input type="submit" value="Place Order"/></td></tr>
       </table>
     </form>
   </body>
