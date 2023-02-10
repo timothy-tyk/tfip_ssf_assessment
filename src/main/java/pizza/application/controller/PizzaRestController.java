@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
-import pizza.application.models.Pizza;
 import pizza.application.models.Order;
 import pizza.application.service.PizzaService;
 
@@ -24,16 +23,13 @@ public class PizzaRestController {
   PizzaService pizzaSvc;
   @PostMapping(value="{id}")
   public ResponseEntity<String> retrieveOrderById(@PathVariable String id){
-    // Order order = pizzaSvc.retrieveFromRedisById(id);
-    Order order = pizzaSvc.getOrderFromDb(id);
-    Pizza pizza = pizzaSvc.getPizzaFromDb(order.getPizzaId());
-    System.out.println(pizza.getPizzaName());
+    Order order = pizzaSvc.retrieveFromRedisById(id);
     if(order == null){
       JsonObject notFound = Json.createObjectBuilder().add("message",String.format("Order %s not found",id)).build();
 
       return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).body(notFound.toString());
     }
-    return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(order.toJson(pizza));
+    return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(order.toJson());
   }
   
 }

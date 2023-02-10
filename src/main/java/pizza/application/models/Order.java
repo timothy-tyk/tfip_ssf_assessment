@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Random;
 
-
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
@@ -14,12 +13,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class Order implements Serializable{
-  private Integer id;
-  private String hexId;
+  private String id;
   private Pizza pizza;
-
-  private Integer pizzaId;
-  private Integer pizzaQty;
 
   @NotEmpty(message = "Please input your name")
   @Size(min = 3, message = "Name must be minimum 3 characters long")
@@ -36,37 +31,19 @@ public class Order implements Serializable{
   private double totalCost;
 
   public Order(){
-    this.hexId = generateHexId(8);
+    this.id = generateHexId(8);
   }
   public Order(Pizza pizza){
-    this.hexId = generateHexId(8);
+    this.id = generateHexId(8);
     this.pizza = pizza;
   }
 
   // Getters and Setters
-  public Integer getId() {
+  public String getId() {
     return id;
   }
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
-  }
-  public Integer getPizzaId() {
-    return pizzaId;
-  }
-  public void setPizzaId(Integer pizzaId) {
-    this.pizzaId = pizzaId;
-  }
-  public Integer getPizzaQty() {
-    return pizzaQty;
-  }
-  public void setPizzaQty(Integer pizzaQty) {
-    this.pizzaQty = pizzaQty;
-  }
-  public String getHexId() {
-    return hexId;
-  }
-  public void setHexId(String hexId) {
-    this.hexId = hexId;
   }
   public Pizza getPizza() {
     return pizza;
@@ -165,19 +142,17 @@ public class Order implements Serializable{
     return Math.round(pizzaCost);
   }
 
-  public String toJson(Pizza pizza){
-    System.out.println(pizza.getPizzaName());
+  public String toJson(){
     return Json.createObjectBuilder()
             .add("orderId", this.getId())
-            .add("hexId", this.getHexId())
             .add("name", this.getName())
             .add("address", this.getAddress())
             .add("phone", this.getPhoneNumber())
             .add("rush", this.isRush())
             .add("comments", this.getComments())
-            .add("pizza", pizza.getPizzaName())
-            .add("size", pizza.getSize())
-            .add("quantity", this.getPizzaQty())
+            .add("pizza", this.getPizza().getPizzaName())
+            .add("size", this.getPizza().getSize())
+            .add("quantity", this.getPizza().getQuantity())
             .add("pizzaCost", this.getPizzaCost())
             .add("total", this.getTotalCost())
             .build().toString();
@@ -189,8 +164,7 @@ public class Order implements Serializable{
     JsonObject jObj = jReader.readObject();
     Order newOrder = new Order();
     Pizza newPizza = new Pizza();
-    newOrder.setId(jObj.getInt("orderId"));
-    newOrder.setHexId(jObj.getString("hexId"));
+    newOrder.setId(jObj.getString("orderId"));
     newOrder.setName(jObj.getString("name"));
     newOrder.setAddress(jObj.getString("address"));
     newOrder.setPhoneNumber(jObj.getString("phone"));
