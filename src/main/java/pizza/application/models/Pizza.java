@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public class Pizza implements Serializable{
-  private Integer id;
   @NotNull(message = "Please a Select a Pizza")
   private String pizzaName;
 
@@ -21,12 +20,6 @@ public class Pizza implements Serializable{
   @NotNull(message = "Minimum 1 Pizza")
   private Integer quantity;
 
-  public Integer getId() {
-    return id;
-  }
-  public void setId(Integer id) {
-    this.id = id;
-  }
   public String getPizzaName() {
     return pizzaName;
   }
