@@ -13,9 +13,9 @@
         <td>Order Number:</td>
         <td>
           <a
-            data-th-href="@{/order/{id}(id=${order.getId()})}"
+            data-th-href="@{/order/{id}(id=${order.getHexId()})}"
             span
-            data-th-text="*{id}"
+            data-th-text="*{hexId}"
           ></a>
         </td>
       </tr>

@@ -1,5 +1,8 @@
 package pizza.application.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,22 +31,29 @@ public class PizzaController {
     model.addAttribute("pizza", new Pizza());
     return "index";
   }
-
+  
+  @Autowired
+  PizzaService pizzaSvc;
+  
   @PostMapping(path = "/pizza", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   public String getOrderDeliveryDetails(@Valid Pizza pizza, BindingResult bindingResult,Model model, HttpSession session){
     if(bindingResult.hasErrors()){
       return "index";
     }
     session.setAttribute("pizza", pizza);
+    
+    List<Pizza> pizzaList = new ArrayList<Pizza>();
+    Pizza pizzaDb = pizzaSvc.addPizzaToDb(pizza);
+    for(int i=0;i<pizza.getQuantity();i++){
+      pizzaList.add(pizzaDb);
+    }
+    session.setAttribute("pizzaList", pizzaList);
+
     Order order = new Order();
     order.setPizza(pizza);
     model.addAttribute("order", order);
-    // model.addAttribute("pizza", pizza);
     return "orderdetails";
   }
-
-  @Autowired
-  PizzaService pizzaSvc;
 
   @PostMapping(path = "/pizza/order", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   public String postOrderDetails(@Valid Order order,BindingResult bindingResult ,Model model, HttpSession session, HttpServletResponse response){
@@ -51,12 +61,17 @@ public class PizzaController {
       return "orderdetails";
     }
     Pizza pizza = (Pizza) session.getAttribute("pizza");
+    List<Pizza> pizzaList = (List<Pizza>)session.getAttribute("pizzaList");
     order.setPizza(pizza);
     order.setPizzaCost(order.calculatePizzaCost(pizza));
     order.setTotalCost(order.getPizzaCost());
+
     if(order.isRush()){
       order.setTotalCost(order.getPizzaCost()+2.0);
     }
+    pizzaSvc.addOrderToDb(order, pizzaList.get(0), pizzaList.size());
+    Order ordFromDb = pizzaSvc.getOrderFromDb(order.getHexId());
+
     int result = pizzaSvc.saveToRedis(order);
     if(result == 0){
       // Failed to save
@@ -64,7 +79,7 @@ public class PizzaController {
       return "orderdetails";
     }
     response.setStatus(HttpServletResponse.SC_CREATED);
-    model.addAttribute("order", order);
+    model.addAttribute("order", ordFromDb);
     
     return "deliverydetails";
   }
@@ -74,6 +89,7 @@ public class PizzaController {
 
   @GetMapping(path = "/order/{id}")
   public String getOrderPageById(@PathVariable String id, Model model){
+    // ResponseEntity<String> orderJson = pizzaRestController.retrieveOrderById(id);
     ResponseEntity<String> orderJson = pizzaRestController.retrieveOrderById(id);
     if(orderJson.getStatusCode()==HttpStatus.NOT_FOUND){
       // throws Whitelabel error page with Status Code 404, but message body doesnt display on railway!!
@@ -81,6 +97,7 @@ public class PizzaController {
       model.addAttribute("error", orderJson.getBody());
       return "notfound";
     }
+
     Order newOrder = Order.createFromJson(orderJson.getBody().toString());
     model.addAttribute("order", newOrder);
     return "deliverydetails";
