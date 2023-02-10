@@ -166,7 +166,6 @@ public class Order implements Serializable{
   }
 
   public String toJson(Pizza pizza){
-    System.out.println(pizza.getPizzaName());
     return Json.createObjectBuilder()
             .add("orderId", this.getId())
             .add("hexId", this.getHexId())
